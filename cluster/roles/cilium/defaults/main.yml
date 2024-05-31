@@ -1,0 +1,27 @@
+# roles/cilium/defaults/main.yml
+cilium_repo_url: "https://helm.cilium.io"
+cilium_version: "{{ CILIUM_VERSION }}"
+cilium_namespace: "{{ CILIUM_NAMESPACE }}"
+cilium_values:
+  debug:
+    enabled: true
+  operator:
+    replicas: 1
+  kubeProxyReplacement: strict
+  k8sServiceHost: 127.0.0.1
+  k8sServicePort: 6443
+  ipv4:
+    enabled: true
+  ipv4NativeRoutingCIDR: "{{ CLUSTER_CIDR }}"
+  ipam:
+    operator:
+      clusterPoolIPv4PodCIDRList:
+        - "{{ CLUSTER_CIDR }}"
+  routingMode: native
+  l2announcements:
+    enabled: true
+  hubble:
+    relay:
+      enabled: true
+    ui:
+      enabled: true

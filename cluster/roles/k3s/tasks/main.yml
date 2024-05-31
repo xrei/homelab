@@ -1,0 +1,50 @@
+# roles/k3s/tasks/main.yml
+
+- name: Download and run the k3s
+  ansible.builtin.shell:
+    cmd: curl -sfL https://get.k3s.io | sh -
+  environment:
+    INSTALL_K3S_VERSION: "{{ INSTALL_K3S_VERSION }}"
+    INSTALL_K3S_EXEC: "--tls-san {{control_plane}} --flannel-backend=none --disable-helm-controller  --disable-network-policy --disable servicelb --disable traefik --secrets-encryption"
+    K3S_KUBECONFIG_MODE: "644"
+
+- name: Wait for k3s service to be active
+  ansible.builtin.command:
+    cmd: sudo systemctl is-active k3s
+  register: k3s_status
+  until: k3s_status.stdout == "active"
+  retries: 10
+  delay: 2
+
+- name: Ensure .kube directory exists
+  ansible.builtin.file:
+    path: "/home/{{ ansible_user }}/.kube"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user_gid }}"
+    mode: "0755"
+  run_once: true
+
+- name: Copy kubeconfig on the control plane
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ K3S_CONFIG_FILE }}"
+    dest: "/home/{{ansible_user}}/.kube/config"
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user_gid }}"
+    mode: "0644"
+  run_once: true
+
+- name: Download Kubernetes config
+  ansible.builtin.slurp:
+    src: "{{ K3S_CONFIG_FILE }}"
+  register: kubeconfig_b64
+  run_once: true
+
+- name: Set Kubernetes config
+  ansible.builtin.copy:
+    content: "{{ kubeconfig_b64.content | b64decode | replace('127.0.0.1', control_plane) }}"
+    dest: "{{ playbook_dir }}/kubeconfig.yaml"
+    mode: 0600
+  delegate_to: localhost
+  run_once: true

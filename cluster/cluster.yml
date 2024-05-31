@@ -1,0 +1,7 @@
+- name: Create kubernetes cluster
+  hosts: all
+  roles:
+    - prereqs
+    - k3s
+    - cilium
+
