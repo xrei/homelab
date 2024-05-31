@@ -3,8 +3,6 @@ cilium_repo_url: "https://helm.cilium.io"
 cilium_version: "{{ CILIUM_VERSION }}"
 cilium_namespace: "{{ CILIUM_NAMESPACE }}"
 cilium_values:
-  preflight:
-    image: '{"repository":"docker.io/cilium/cilium","tag":"{{ CILIUM_VERSION }}"}'
   debug:
     enabled: true
   operator:
