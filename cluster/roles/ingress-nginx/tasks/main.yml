@@ -6,3 +6,4 @@
     chart_ref: ingress-nginx
     chart_repo_url: "https://kubernetes.github.io/ingress-nginx"
     release_namespace: nginx
+    create_namespace: true
