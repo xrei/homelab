@@ -4,6 +4,8 @@
 ansible_user: root
 ansible_ssh_private_key_file: ~/.ssh/id_ed25519
 control_plane: 192.168.8.4
+lb_ip_pool:
+  - 192.168.8.200/29
 
 # k3s
 K3S_CONFIG_FILE: /etc/rancher/k3s/k3s.yaml

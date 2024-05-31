@@ -48,3 +48,7 @@
     mode: 0600
   delegate_to: localhost
   run_once: true
+
+- name: Update Helm repositories
+  ansible.builtin.command:
+    cmd: helm repo update

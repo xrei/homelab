@@ -1,0 +1,8 @@
+# roles/ingress-nginx/tasks/main.yml
+
+- name: Install ingress-nginx
+  kubernetes.core.helm:
+    name: ingress-nginx
+    chart_ref: ingress-nginx
+    chart_repo_url: "https://kubernetes.github.io/ingress-nginx"
+    release_namespace: nginx

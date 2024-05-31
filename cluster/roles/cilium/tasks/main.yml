@@ -1,4 +1,5 @@
 # roles/cilium/tasks/main.yml
+
 - name: Install Cilium
   kubernetes.core.helm:
     name: cilium
@@ -7,3 +8,22 @@
     chart_version: "{{ cilium_version }}"
     release_namespace: "{{ cilium_namespace }}"
     values: "{{ cilium_values }}"
+
+- name: Wait for Cilium
+  kubernetes.core.k8s_info:
+    kind: CustomResourceDefinition
+    name: "{{ item }}"
+  loop:
+    - ciliuml2announcementpolicies.cilium.io
+    - ciliumloadbalancerippools.cilium.io
+  register: crd
+  until: crd.resources | length > 0
+  retries: 10
+  delay: 5
+
+- name: Apply Cilium custom resources
+  kubernetes.core.k8s:
+    template: "{{ item }}"
+  loop:
+    - cilium_lb_ip_pool.yml
+    - cilium_l2_announcement_policy.yml
