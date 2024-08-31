@@ -8,3 +8,6 @@ cluster:
 	make -C cluster
 
 all: install-collections cluster
+
+upgrade:
+	make -C cluster upgrade

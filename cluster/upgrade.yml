@@ -1,0 +1,7 @@
+- name: Upgrade k3s cluster
+  hosts: all
+  roles:
+    # - k3s
+    # - cilium
+    - ingress-nginx
+
