@@ -2,3 +2,4 @@ test
 .vscode
 .env
 kubeconfig.yaml
+.DS_Store
