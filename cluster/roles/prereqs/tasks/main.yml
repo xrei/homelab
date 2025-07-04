@@ -100,3 +100,9 @@
     state: started
   become: true
 
+- name: Install python3-kubernetes
+  apt:
+    name: python3-kubernetes
+    state: present
+    update_cache: yes
+  become: true
