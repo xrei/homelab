@@ -52,3 +52,4 @@
 - name: Update Helm repositories
   ansible.builtin.command:
     cmd: helm repo update
+  ignore_errors: true
