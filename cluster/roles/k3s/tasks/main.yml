@@ -5,7 +5,7 @@
     cmd: curl -sfL https://get.k3s.io | sh -
   environment:
     INSTALL_K3S_VERSION: "{{ INSTALL_K3S_VERSION }}"
-    INSTALL_K3S_EXEC: "--node-ip={{ node_virtual_ip }} --advertise-address={{ node_virtual_ip }} --tls-san {{ node_virtual_ip }} --tls-san {{ control_plane }} --flannel-backend=none --disable-helm-controller  --disable-network-policy --disable servicelb --disable traefik --secrets-encryption"
+    INSTALL_K3S_EXEC: "--node-ip={{ control_plane }} --advertise-address={{ control_plane }} --tls-san {{ control_plane_name }} --tls-san {{ control_plane }} --tls-san {{ control_plane_name_ext }} --flannel-backend=none --disable-helm-controller  --disable-network-policy --disable servicelb --disable traefik --secrets-encryption"
     K3S_KUBECONFIG_MODE: "644"
 
 - name: Wait for k3s service to be active
@@ -43,7 +43,7 @@
 
 - name: Set Kubernetes config
   ansible.builtin.copy:
-    content: "{{ kubeconfig_b64.content | b64decode | replace('127.0.0.1', control_plane) }}"
+    content: "{{ kubeconfig_b64.content | b64decode | replace('127.0.0.1', control_plane_name_ext) }}"
     dest: "{{ playbook_dir }}/kubeconfig.yaml"
     mode: 0600
   delegate_to: localhost
