@@ -12,4 +12,4 @@ setup:
 upgrade:
 	ansible-playbook \
 		--inventory inventory/hosts.yml \
-		upgrade.yml
+		upgrade.yml $(ARGS)

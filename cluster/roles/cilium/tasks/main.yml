@@ -1,5 +1,34 @@
 # roles/cilium/tasks/main.yml
 
+# Before a Cilium minor upgrade: -e cilium_preflight=true.
+- name: Cilium preflight check
+  when: cilium_preflight | default(false) | bool
+  block:
+    - name: Install the Cilium preflight release
+      kubernetes.core.helm:
+        name: cilium-preflight
+        chart_ref: cilium
+        chart_repo_url: "{{ cilium_repo_url }}"
+        chart_version: "{{ cilium_version }}"
+        release_namespace: "{{ cilium_namespace }}"
+        values:
+          preflight:
+            enabled: true
+          agent: false
+          operator:
+            enabled: false
+          k8sServiceHost: 127.0.0.1
+          k8sServicePort: 6443
+        wait: true
+        wait_timeout: 10m
+
+    - name: Remove the Cilium preflight release
+      kubernetes.core.helm:
+        name: cilium-preflight
+        release_namespace: "{{ cilium_namespace }}"
+        release_state: absent
+        wait: true
+
 - name: Install Cilium
   kubernetes.core.helm:
     name: cilium
@@ -8,6 +37,8 @@
     chart_version: "{{ cilium_version }}"
     release_namespace: "{{ cilium_namespace }}"
     values: "{{ cilium_values }}"
+    wait: true
+    wait_timeout: 10m
 
 - name: Wait for Cilium
   kubernetes.core.k8s_info:

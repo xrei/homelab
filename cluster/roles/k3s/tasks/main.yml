@@ -16,6 +16,12 @@
   retries: 10
   delay: 2
 
+- name: Wait for the node to be Ready
+  ansible.builtin.command:
+    cmd: k3s kubectl wait --for=condition=Ready node --all --timeout=180s
+  become: true
+  changed_when: false
+
 - name: Ensure .kube directory exists
   ansible.builtin.file:
     path: "/home/{{ ansible_user }}/.kube"
@@ -52,4 +58,6 @@
 - name: Update Helm repositories
   ansible.builtin.command:
     cmd: helm repo update
-  ignore_errors: true
+  # The helm tasks use chart_repo_url: the node may have no repositories.
+  failed_when: false
+  changed_when: false

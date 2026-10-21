@@ -3,6 +3,7 @@ cilium_repo_url: "https://helm.cilium.io"
 cilium_version: "{{ CILIUM_VERSION }}"
 cilium_namespace: "{{ CILIUM_NAMESPACE }}"
 cilium_values:
+  upgradeCompatibility: "{{ CILIUM_UPGRADE_COMPATIBILITY }}"
   debug:
     enabled: true
   operator:
@@ -25,3 +26,7 @@ cilium_values:
       enabled: true
     ui:
       enabled: true
+    tls:
+      auto:
+        # certgen renews the Hubble certs on a schedule; the helm method never does.
+        method: cronJob

@@ -11,9 +11,14 @@ lb_ip_pool:
 
 # k3s
 K3S_CONFIG_FILE: /etc/rancher/k3s/k3s.yaml
-INSTALL_K3S_VERSION: v1.33.4+k3s1
+INSTALL_K3S_VERSION: v1.36.5+k3s1
 
 # Cilium
 CLUSTER_CIDR: 10.42.0.0/16
 CILIUM_NAMESPACE: kube-system
-CILIUM_VERSION: "v1.18.1"
+CILIUM_VERSION: "v1.20.3"
+# Helm upgradeCompatibility: the Cilium minor this cluster was first installed with
+CILIUM_UPGRADE_COMPATIBILITY: "1.18"
+
+# ingress-nginx
+INGRESS_NGINX_VERSION: "4.15.1"

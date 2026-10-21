@@ -4,3 +4,5 @@ test
 kubeconfig.yaml
 .DS_Store
 secret
+cluster/host_vars/*.yml
+!cluster/host_vars/*.example.yml

@@ -1,7 +1,10 @@
+# One role at a time: make upgrade ARGS='--tags cilium -e CILIUM_VERSION=<version>'
 - name: Upgrade k3s cluster
   hosts: all
   roles:
-    # - k3s
-    # - cilium
-    - ingress-nginx
-
+    - role: k3s
+      tags: k3s
+    - role: cilium
+      tags: cilium
+    - role: ingress-nginx
+      tags: ingress-nginx
